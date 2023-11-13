@@ -38,90 +38,35 @@ class Client(models.Model):
     phone = models.CharField(max_length=9)
     desc = models.TextField(null=True, blank=True)
     @property
-    def get_all_transactions(self):
-        income_records = Income.objects.filter(client=self)
-        outcome_records = Outcome.objects.filter(client=self)
-        transactions = {
-            'outcome': {},
-            'income': {},
-            'debt_counts': {},
-            'total_income': {'count': 0, 'total': 0},  # Add total income
-            'total_outcome': {'count': 0, 'total': 0},  # Add total outcome
+    def transactions(self):
+        outcomes = Outcome.objects.filter(client=self)
+        incomes = Income.objects.filter(client=self)
+        
+        outcome_data = [
+            {
+                'product_name': outcome.product_name,
+                'count': outcome.count,
+                'date': outcome.date,
+                'total': outcome.total
+            }
+            for outcome in outcomes
+        ]
+        
+        income_data = [
+            {
+                'product_name': income.product_name,
+                'count': income.count,
+                'date': income.date,
+                'total': income.total
+            }
+            for income in incomes
+        ]
+
+        return {
+            'outcomes': outcome_data,
+            'incomes': income_data
         }
-
-        # Calculate total outcome counts and total amount for each product
-        total_outcome_counts = {}
-        total_outcome_amounts = {}
-        for outcome in outcome_records:
-            product_name = outcome.product.name
-            count = outcome.count
-            total_outcome_counts[product_name] = total_outcome_counts.get(product_name, 0) + count
-            total_outcome_amounts[product_name] = total_outcome_amounts.get(product_name, 0) + outcome.total
-
-        # Calculate total income counts and total amount for each product
-        total_income_counts = {}
-        total_income_amounts = {}
-        for income in income_records:
-            product_name = income.product.name
-            count = income.count
-            total_income_counts[product_name] = total_income_counts.get(product_name, 0) + count
-            total_income_amounts[product_name] = total_income_amounts.get(product_name, 0) + income.total
-
-        # Calculate total income count and amount
-        transactions['total_income']['total'] = sum(total_income_amounts.values())
-        transactions['total_income']['count'] = sum(total_income_counts.values())
-        
-
-        # Calculate total outcome count and amount
-        transactions['total_outcome']['total'] = sum(total_outcome_amounts.values())
-        transactions['total_outcome']['count'] = sum(total_outcome_counts.values())
-        
-
-        for outcome in outcome_records:
-            product_name = outcome.product.name
-            count = outcome.count
-            date = outcome.date
-            total = outcome.total
-            transactions['outcome'][product_name] = {
-                'count': count,
-                'date': date,
-                'total': total,
-            }
-
-        for income in income_records:
-            product_name = income.product.name
-            count = income.count
-            date = income.date
-            total = income.total
-            transactions['income'][product_name] = {
-                'count': count,
-                'date': date,
-                'total': total,
-            }
-
-            # Update total_income directly in debt_counts
-            transactions['debt_counts'][product_name] = {
-                'count': total_outcome_counts.get(product_name, 0) - total_income_counts.get(product_name, 0),
-                'total': total_outcome_amounts.get(product_name, 0) - total_income_amounts.get(product_name, 0),
-                'status': "",  # Update this based on your requirements
-            }
-
-        for product_name in set(transactions['outcome'].keys()) | set(transactions['income'].keys()):
-            outcome_info = transactions['outcome'].get(product_name, {'count': 0, 'date': None, 'total': 0})
-            income_info = transactions['income'].get(product_name, {'count': 0, 'date': None, 'total': 0})
-
-            outcome_count = outcome_info['count']
-            income_count = total_income_counts.get(product_name, 0)
-            product_debt_count = outcome_count - income_count
-            transactions['debt_counts'][product_name]['count'] = product_debt_count
-
-            # Check if both count and total are 0
-            if product_debt_count == 0 and transactions['debt_counts'][product_name]['total'] == 0:
-                transactions['debt_counts'][product_name]['status'] = "Shartnoma yakunlangan"
-            else:
-                transactions['debt_counts'][product_name]['status'] = "Qarzdorlik"
-
-        return transactions
+    
 
 
 
