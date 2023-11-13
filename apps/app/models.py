@@ -36,83 +36,81 @@ class Client(models.Model):
     passport = models.CharField(max_length=9, null=True, blank=True)
     phone = models.CharField(max_length=9)
     desc = models.TextField(null=True, blank=True)
+
+
     @property
     def transactions(self):
         outcomes = Outcome.objects.filter(client=self)
         incomes = Income.objects.filter(client=self)
-        
-        outcome_data = [
-            {
+
+        outcome_data = []
+        income_data = []
+
+        # Process outcome transactions
+        for outcome in outcomes:
+            outcome_data.append({
                 'id': outcome.id,
                 'product_name': outcome.product_name,
                 'count': outcome.count,
                 'date': outcome.date,
                 'total': outcome.total
-            }
-            for outcome in outcomes
-        ]
-        
-        income_data = [
-            {
+            })
+
+        # Process income transactions
+        for income in incomes:
+            income_data.append({
                 'id': income.id,
                 'product_name': income.product_name,
                 'count': income.count,
                 'date': income.date,
                 'total': income.total
-            }
-            for income in incomes
-        ]
+            })
+
+        totals = {}
+
+        # Update totals with counts for each product_name
+        for product in outcome_data:
+            product_name = product['product_name']
+            if product_name not in totals:
+                totals[product_name] = {
+                    'counts_outcome': 0,  # Change total_outcomes to counts_outcome
+                    'counts_income': 0,   # Change total_incomes to counts_income
+                    'difference': 0,
+                }
+            totals[product_name]['counts_outcome'] += product.get('count', 0)
+
+        for product in income_data:
+            product_name = product['product_name']
+            if product_name not in totals:
+                totals[product_name] = {
+                    'counts_outcome': 0,
+                    'counts_income': 0,
+                    'difference': 0,
+                }
+            totals[product_name]['counts_income'] += product.get('count', 0)
+
+        for product_name in totals:
+            totals[product_name]['difference'] = totals[product_name]['counts_outcome'] - totals[product_name]['counts_income']
 
         return {
             'outcomes': outcome_data,
-            'incomes': income_data
+            'incomes': income_data,
+            'totals': totals,
         }
-    
-
-
-
-        
-    def delete_completed(self):
-        if self.status == "Shartnoma yakunlangan" and self.debt_product == 0:
-            three_days_ago = timezone.now() - timezone.timedelta(minutes=3)
-            if self.income.filter(date__lte=three_days_ago).exists():
-                return
-            self.delete()
-    
     
     def __str__(self):
         return f"{self.name}"
     
-# Rent class
-
-class Rent(models.Model):
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    date = models.DateTimeField(null=True, blank=True)
-    @property
-    def client_name(self):
-        return self.client.name
-    @property
-    def debt_product(self):
-        count_out = sum(outcome.count for outcome in self.outcome.all())
-        count_in = sum(income.count for income in self.income.all())
-        return count_in - count_out
-    
-    def __str__(self):
-        return f"{self.client.name}"
 
     
 # Outcome class
 
 class Outcome(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    rent = models.ForeignKey(Rent, on_delete=models.CASCADE)
     product = models.ForeignKey(ProductType, on_delete=models.CASCADE)
     count = models.FloatField()
     price = models.PositiveBigIntegerField(null=True, blank=True)
     date = models.DateTimeField()
-    
-    
-        
     @property
     def total(self):
         if self.price is not None and self.price > 0:
@@ -124,16 +122,9 @@ class Outcome(models.Model):
     @property
     def client_name(self):
         return self.client.name
-    
-    @property
-    def rent_name(self):
-        return self.rent.client_name
-    
     @property
     def product_name(self):
         return self.product.name
-    
-    
     
     def __str__(self):
         return f"{self.client.name}, {self.product.name} - {self.count}"
@@ -141,15 +132,10 @@ class Outcome(models.Model):
 
     
 class Income(models.Model):
-    class PayType(models.TextChoices):
-        MAXSUS = "Maxsus to'lov", "Maxsus to'lov"
-        TOLIQ = "To'liq yopish", "To'liq yopish"
-    pay_type = models.CharField(max_length=30, choices=PayType.choices, null=True, blank=True)
-    rent = models.ForeignKey(Rent, on_delete=models.CASCADE)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     product = models.ForeignKey(ProductType, on_delete=models.CASCADE)
     count = models.PositiveBigIntegerField()
-    pay = models.PositiveBigIntegerField(null=True, blank=True)
+    income_price = models.PositiveBigIntegerField(null=True, blank=True)
     day = models.IntegerField()
     date = models.DateTimeField()
 
@@ -157,9 +143,6 @@ class Income(models.Model):
     def client_name(self):
         return self.client.name
     
-    @property
-    def rent_name(self):
-        return self.rent.client_name
     
     @property
     def product_name(self):
@@ -168,19 +151,28 @@ class Income(models.Model):
     
     @property
     def total(self):
-        if self.pay is not None and self.pay > 0:
-            return self.pay * self.count
+        if self.income_price is not None and self.pay > 0:
+            return self.income_price * self.count
         elif self.product.price is not None:
             return self.product.price * self.count
         else:
             return 0
-        
-    
-    # @property
-    # def debt_days(self):
-    #     today = timezone.localdate()
-    #     days_overdue = (today - ).days
-    #     return today
-    
+
     def __str__(self):
         return f"{self.client.name}, {self.product.name} - {self.count}"
+
+
+
+
+class Payments(models.Model):
+    class PayType(models.TextChoices):
+        MAXSUS = "Maxsus to'lov", "Maxsus to'lov"
+        TOLIQ = "To'liq yopish", "To'liq yopish"
+    pay_type = models.CharField(max_length=30, choices=PayType.choices, null=True, blank=True)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    product = models.ForeignKey(ProductType, on_delete=models.CASCADE)
+    summa = models.FloatField()
+    date = models.DateTimeField()
+    
+    def __str__(self):
+        return f"{self.client.name} | {self.product.name} | {self.summa}"

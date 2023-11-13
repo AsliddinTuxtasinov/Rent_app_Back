@@ -29,23 +29,6 @@ class ClientPagination(pagination.PageNumberPagination):
         })
 
 
-class RentPagination(pagination.PageNumberPagination):
-    page_size = 10
-    page_size_query_param = "page_size"
-    max_page_size = 50
-    queryset = Rent.objects.all()
-    filterset_class = Rent
-    page_size_query_param = 'page_size'
-    def get_paginated_response(self, data):
-        return Response({
-            'page_size': self.page_size,
-            'total_objects': self.page.paginator.count,
-            'total_pages': self.page.paginator.num_pages,
-            'current_page_number': self.page.number,
-            'next': self.get_next_link(),
-            'previous': self.get_previous_link(),
-            'results': data,
-        })
 
 class IncomePagination(pagination.PageNumberPagination):
     page_size = 10
@@ -84,6 +67,24 @@ class OutcomePagination(pagination.PageNumberPagination):
         })
 
 
+class PaymentsPagination(pagination.PageNumberPagination):
+    page_size = 10
+    page_size_query_param = "page_size"
+    max_page_size = 50
+    queryset = Payments.objects.all()
+    filterset_class = Payments
+    page_size_query_param = 'page_size'
+    def get_paginated_response(self, data):
+        return Response({
+            'page_size': self.page_size,
+            'total_objects': self.page.paginator.count,
+            'total_pages': self.page.paginator.num_pages,
+            'current_page_number': self.page.number,
+            'next': self.get_next_link(),
+            'previous': self.get_previous_link(),
+            'results': data,
+        })
+
 class ProTypeViewset(ModelViewSet):
     queryset = ProductType.objects.all().order_by('-id')
     serializer_class = ProTypeSerializer
@@ -106,15 +107,6 @@ class ClientViewset(ModelViewSet):
     filterset_class = ClientFilter
     serializer_class = ClientSerializer
 
-
-class RentViewset(ModelViewSet):
-    queryset = Rent.objects.all().order_by('-id')
-    permission_classes = [IsAuthenticatedOrReadOnly]
-    pagination_class = RentPagination
-    filter_backends = [DjangoFilterBackend, SearchFilter]
-    search_fields = ('client','date')
-    filterset_class = RentFilter
-    serializer_class = RentSerializer
 
 
 
@@ -139,3 +131,13 @@ class IncomeViewset(ModelViewSet):
     filterset_class = IncomeFilter
     serializer_class = IncomeSerializer
     
+
+class PaymentsViewset(ModelViewSet):
+    queryset = Payments.objects.all().order_by('-id')
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    pagination_class = IncomePagination
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    search_fields = ('client','product','count','price','date')
+    # filterset_fields = ('status', )
+    filterset_class = PaymentsFilter
+    serializer_class = PaymentsSerializer

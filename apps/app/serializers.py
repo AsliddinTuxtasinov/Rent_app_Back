@@ -26,24 +26,22 @@ class ClientSerializer(serializers.ModelSerializer):
         #     count_in = obj.income.all().aggregate(Sum('count'))['count__sum'] or 0
         #     return count_in - count_out
     
-class RentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Rent
-        fields = ['id','client','client_name','date']
-        # def to_representation(self, instance):
-        #     representation = super().to_representation(instance)
-        #     representation['debt_product'] = ClientSerializer(instance=instance.debt_product).data
-        #     return representation
 
 
 class OutcomeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Outcome
-        fields = ['id','rent','rent_name','client','client_name','product','product_name','count','price','date','total']
+        fields = ['id','client','client_name','product','product_name','count','price','date','total']
         # depth=1
 
 
 class IncomeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Income
-        fields = ['id','pay_type','rent','rent_name','client','client_name','product','product_name','count','pay','day','date','total',]
+        fields = ['id','client','client_name','product','product_name','count','income_price','day','date','total',]
+        
+        
+class PaymentsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payments
+        fields = ['id','pay_type','client','product','summa','date']

@@ -35,9 +35,10 @@ class IncomeInline(admin.TabularInline):
     fields = ['client',"product","count","day","date"] 
 admin.site.register(Income)
 
-@admin.register(Rent)
-class Rentdmin(admin.ModelAdmin):
-    list_filter = ['client']
-    inlines = [OutcomeInline, IncomeInline]
-    list_display = ["client"]
+
+class PaymentsAdmin(admin.ModelAdmin):
+    list_display = ["client",'summa','date']
     list_per_page = 10
+    class Meta:
+        model = Payments
+admin.site.register(Payments, PaymentsAdmin)

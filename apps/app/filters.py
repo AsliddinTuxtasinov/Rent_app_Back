@@ -22,19 +22,21 @@ class ClientFilter(filters.FilterSet):
         fields = ['name','passport','phone']
 
 
-class RentFilter(filters.FilterSet):
-    class Meta:
-        model = Rent
-        fields = ['date']
-
 
 class OutcomeFilter(filters.FilterSet):
     class Meta:
         model = Outcome
-        fields = ['rent','product','date']
+        fields = ['product','date']
 
 
 class IncomeFilter(filters.FilterSet):
     class Meta:
         model = Income
-        fields = ['rent','product','date']
+        fields = ['product','date']
+        
+        
+
+class PaymentsFilter(filters.FilterSet):
+    class Meta:
+        model = Payments
+        fields = ['pay_type','product','date']

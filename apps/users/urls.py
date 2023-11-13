@@ -17,9 +17,9 @@ router.register('user', UserViewset, basename='user')
 router.register('protype', ProTypeViewset, basename='protype')
 router.register('product', ProductViewset, basename='product')
 router.register('client', ClientViewset, basename='client')
-router.register('rent', RentViewset, basename='rent')
 router.register('outcome', OutcomeViewset, basename='outcome')
 router.register('income', IncomeViewset, basename='income')
+router.register('payments', PaymentsViewset, basename='payments')
 
 urlpatterns = [
     path('', include(router.urls)),
