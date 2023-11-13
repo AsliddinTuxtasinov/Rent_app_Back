@@ -192,7 +192,7 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Asia/Tashkent'
 
 USE_I18N = True
-APPEND_SLASH = False
+# APPEND_SLASH = False
 USE_TZ = True
 
 
