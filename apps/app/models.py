@@ -5,7 +5,6 @@ from django.utils import timezone
 from django.db.models import Sum
 
 
-
 # Product class
 class Product(models.Model):
     name = models.CharField(max_length=200)
@@ -44,6 +43,7 @@ class Client(models.Model):
         
         outcome_data = [
             {
+                'id': outcome.id,
                 'product_name': outcome.product_name,
                 'count': outcome.count,
                 'date': outcome.date,
@@ -54,6 +54,7 @@ class Client(models.Model):
         
         income_data = [
             {
+                'id': income.id,
                 'product_name': income.product_name,
                 'count': income.count,
                 'date': income.date,
@@ -135,7 +136,8 @@ class Outcome(models.Model):
     
     
     def __str__(self):
-        return f"{self.client_name} , {self.product.name}"
+        return f"{self.client.name}, {self.product.name} - {self.count}"
+
 
     
 class Income(models.Model):
@@ -179,41 +181,6 @@ class Income(models.Model):
     #     today = timezone.localdate()
     #     days_overdue = (today - ).days
     #     return today
+    
     def __str__(self):
-        return f"{self.client.name} , {self.product.name}"
-# class Income(models.Model):
-#     rent = models.ForeignKey(Rent, on_delete=models.CASCADE)
-#     client = models.ForeignKey(Client, on_delete=models.CASCADE)
-#     product = models.ForeignKey(ProductType, on_delete=models.CASCADE)
-#     count = models.PositiveBigIntegerField()
-#     day = models.IntegerField()
-#     date = models.DateTimeField()
-    
-#     @property
-#     def client_name(self):
-#         return self.client.name
-    
-#     @property
-#     def rent_name(self):
-#         return self.rent.client_name
-    
-#     @property
-#     def product_name(self):
-#         return self.product.name
-    
-    
-#     @property
-#     def total(self):
-#         if self.price is not None and self.price > 0:
-#             return self.price * self.count
-#         elif self.product.price is not None:
-#             return self.product.price * self.count
-#         else:
-#             return 0
-#     # @property
-#     # def debt_days(self):
-#     #     today = timezone.localdate()
-#     #     days_overdue = (today - ).days
-#     #     return today
-#     # def __str__(self):
-#     #     return f"{self.client.name} , {self.product.name}"
+        return f"{self.client.name}, {self.product.name} - {self.count}"
