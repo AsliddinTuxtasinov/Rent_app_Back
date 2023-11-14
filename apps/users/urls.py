@@ -25,11 +25,11 @@ urlpatterns = [
     path('', include(router.urls)),
     path('auth-token/', obtain_auth_token, name='api_token_auth'),
 
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    # path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    # path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    # path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
    
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    # path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     
 ]
 
