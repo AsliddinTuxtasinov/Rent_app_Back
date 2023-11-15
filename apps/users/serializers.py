@@ -72,27 +72,27 @@ class DirectorSerializer(serializers.ModelSerializer):
 
 
 
-class MeSerializer(serializers.Serializer):
-    token = serializers.CharField(max_length=1024, write_only=True)
-    # access = serializers.CharField(max_length=1024, read_only=True)
-    # refresh = serializers.CharField(max_length=1024, read_only=True)
-    # refresh_token = serializers.CharField(max_length=1024, read_only=True)
+# class MeSerializer(serializers.Serializer):
+#     token = serializers.CharField(max_length=1024, write_only=True)
+#     # access = serializers.CharField(max_length=1024, read_only=True)
+#     # refresh = serializers.CharField(max_length=1024, read_only=True)
+#     # refresh_token = serializers.CharField(max_length=1024, read_only=True)
 
-    def validate(self, attrs):
-        token = attrs.get('token')
+#     def validate(self, attrs):
+#         token = attrs.get('token')
 
-        try:
-            # Token ni olish va tasdiqlash
-            decoded_token = RefreshToken(token)
-            user_id = decoded_token.payload.get('user_id')
-            user = User.objects.get(id=user_id)
+#         try:
+#             # Token ni olish va tasdiqlash
+#             decoded_token = RefreshToken(token)
+#             user_id = decoded_token.payload.get('user_id')
+#             user = User.objects.get(id=user_id)
 
-            data = {
-                "access": str(decoded_token.access_token),
-                # "refresh": str(decoded_token),
-                # "refresh_token": str(decoded_token),
-            }
+#             data = {
+#                 "access": str(decoded_token.access_token),
+#                 # "refresh": str(decoded_token),
+#                 # "refresh_token": str(decoded_token),
+#             }
 
-            return data
-        except Exception as e:
-            raise AuthenticationFailed("Invalid token")
+#             return data
+#         except Exception as e:
+#             raise AuthenticationFailed("Invalid token")
