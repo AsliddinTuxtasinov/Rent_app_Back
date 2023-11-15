@@ -4,6 +4,8 @@ from apps.users.views import *
 from apps.app.views import *
 from .views import *
 
+from apps.users.views import *
+
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -20,6 +22,9 @@ router.register('client', ClientViewset, basename='client')
 router.register('outcome', OutcomeViewset, basename='outcome')
 router.register('income', IncomeViewset, basename='income')
 router.register('payments', PaymentsViewset, basename='payments')
+
+router.register('usersme', UserMeViewSet, basename='userme')
+
 
 urlpatterns = [
     path('', include(router.urls)),

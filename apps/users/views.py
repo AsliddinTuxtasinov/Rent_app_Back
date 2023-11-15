@@ -74,3 +74,16 @@ class LoginAPIView(generics.GenericAPIView):
             raise InvalidToken(e.args[0])
 
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
+
+
+class UserMeViewSet(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+
+    @action(detail=False, methods=['post'], url_path='me')
+    def get_my_data(self, request):
+        serializer = MeSerializer(data={'token': request.auth})
+        if serializer.is_valid():
+            user_data = serializer.validated_data
+            return Response(user_data)
+        else:
+            raise AuthenticationFailed("Invalid token")
