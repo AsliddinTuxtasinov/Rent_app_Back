@@ -74,11 +74,11 @@ urlpatterns = [
    
    
    path('Login/', LoginAPIView.as_view()),
-   path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-   path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-   path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+   path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+   path('refresh_token/', TokenRefreshView.as_view(), name='token_refresh'),
+#    path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+   path('access_token/', TokenVerifyView.as_view(), name='access_token'),
    
-   path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
 ]
 urlpatterns += [
     path('api-auth/', include('rest_framework.urls')),
