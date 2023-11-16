@@ -1,8 +1,7 @@
-
 from pathlib import Path
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 from datetime import timedelta
-
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-kkul+=#%)finmx_l0u*=4=@*vthm)k*t*^gg-xk$kyiw5!4)7e'
@@ -11,7 +10,6 @@ SECRET_KEY = 'django-insecure-kkul+=#%)finmx_l0u*=4=@*vthm)k*t*^gg-xk$kyiw5!4)7e
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-
 
 # Application definition
 
@@ -28,7 +26,7 @@ INSTALLED_APPS = [
     'apps.users',
     # packages
     'rest_framework',
-    'corsheaders', 
+    'corsheaders',
     'django_filters',
     'rest_framework_simplejwt',
     'drf_yasg',
@@ -45,7 +43,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
 
 AUTH_USER_MODEL = 'users.User'
 ROOT_URLCONF = 'config.urls'
@@ -67,7 +64,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -92,10 +88,13 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'config.custom_renderers.CustomRenderer',
+        'rest_framework.renderers.JSONRenderer',
+    ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         # 'rest_framework.authentication.BasicAuthentication',
         # 'rest_authtoken.auth.AuthTokenAuthentication',
@@ -156,19 +155,16 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
-
-
+ 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',  # Add your React app's URL here
-    'http://localhost:3001', 
-    'http://localhost:3002', 
+    'http://localhost:3001',
+    'http://localhost:3002',
 ]
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-
 
 # AUTH_PASSWORD_VALIDATORS = [
 #     {
@@ -186,7 +182,6 @@ CORS_ALLOW_CREDENTIALS = True
 # ]
 
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -197,7 +192,6 @@ TIME_ZONE = 'Asia/Tashkent'
 USE_I18N = True
 # APPEND_SLASH = False
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
