@@ -7,7 +7,6 @@ class User(AbstractUser,PermissionsMixin):
     class Role(models.TextChoices):
         DIRECTOR = "DIRECTOR",'director'
         MANAGER = "MANAGER",'manager'
-    subject = models.CharField(max_length=150, verbose_name="Subject", null=True, blank=True)
     description = models.TextField(verbose_name='Description', null=True, blank=True)
     role = models.CharField(max_length=15,choices=Role.choices,null=True,blank=True)
     class Meta:
