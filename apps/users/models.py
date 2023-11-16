@@ -5,9 +5,8 @@ from django.contrib.auth.models import AbstractUser,BaseUserManager,PermissionsM
 
 class User(AbstractUser,PermissionsMixin):
     class Role(models.TextChoices):
-        DIRECTOR = "DIRECTOR",'director',
+        DIRECTOR = "DIRECTOR",'director'
         MANAGER = "DIRECTOR",'manager'
-
     description = models.TextField(verbose_name='Description', null=True, blank=True)
     role = models.CharField(max_length=15,choices=Role.choices,null=True,blank=True)
     class Meta:
