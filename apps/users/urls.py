@@ -10,9 +10,9 @@ from django.conf.urls.static import static
 from rest_framework.authtoken.views import obtain_auth_token
 
 router = DefaultRouter()
-router.register('director', DirectorViewset, basename='director')
-router.register('manager', ManagerViewset, basename='manager')
-router.register('user', UserViewset, basename='user')
+router.register('directors', DirectorViewset, basename='director')
+router.register('managers', ManagerViewset, basename='manager')
+router.register('users', UserViewset, basename='user')
 
 router.register('protypes', ProTypeViewset, basename='protype')
 router.register('products', ProductViewset, basename='product')
