@@ -33,12 +33,12 @@ class LoginSerializer(serializers.ModelSerializer):
     lastName = serializers.CharField(max_length=223, read_only=True)
     # role = serializers.ChoiceField(max_length=223, read_only=True)
 
-    def get_fist_name(self, obj):
+    def get_fistName(self, obj):
         username = obj.get('username')
         user = User.objects.filter(username=username).first()
         return user.firstName
 
-    def get_last_name(self, obj):
+    def get_lastName(self, obj):
         username = obj.get('username')
         user = User.objects.filter(username=username).first()
         return user.lastName
