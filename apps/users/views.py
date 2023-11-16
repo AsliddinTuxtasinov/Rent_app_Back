@@ -54,6 +54,32 @@ class DirectorViewset(ModelViewSet):
     def partial_update(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
 
+class ManagerViewset(ModelViewSet):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    queryset = Manager.objects.all()
+    serializer_class = ManagerSerializer
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        try:
+            director = Manager.objects.create_user(username=data['username'], password=data['password'])
+            serializer = ManagerSerializer(director, partial=True)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except:
+            return Response({'error': 'Please be aware'})
+
+    def update(self, request, *args, **kwargs):
+        director = self.get_object()
+        data = request.data
+        director.username = data.get('username', director.username)
+        director.password = data.get('password', director.password)
+        director.save()
+        serializer = ManagerSerializer(director, partial=True)
+        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+
+    def partial_update(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
 
 class UserViewset(ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]

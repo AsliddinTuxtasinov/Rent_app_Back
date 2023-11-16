@@ -11,6 +11,11 @@ class DirectorAdmin(UserAdmin):
     list_filter = ['role','is_active']
     model = Director
     add_form =DirectorForm
-    
 admin.site.register(Director,DirectorAdmin)
 # #########################
+
+class ManagerAdmin(UserAdmin):
+    list_filter = ['role','is_active']
+    model = Manager
+    add_form =ManagerForm
+admin.site.register(Manager,ManagerAdmin)

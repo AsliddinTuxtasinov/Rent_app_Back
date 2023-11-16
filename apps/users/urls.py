@@ -11,6 +11,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 
 router = DefaultRouter()
 router.register('director', DirectorViewset, basename='director')
+router.register('manager', ManagerViewset, basename='manager')
 router.register('user', UserViewset, basename='user')
 
 router.register('protype', ProTypeViewset, basename='protype')

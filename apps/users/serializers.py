@@ -25,6 +25,10 @@ class DirectorSerializer(serializers.ModelSerializer):
         model = Director
         fields = ['id', 'username', 'role']
 
+class ManagerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Manager
+        fields = ['id', 'username', 'role']
 
 class LoginSerializer(serializers.ModelSerializer):
     username = serializers.CharField(max_length=223, required=True)
