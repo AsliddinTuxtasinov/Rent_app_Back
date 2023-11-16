@@ -10,7 +10,12 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields  = ['id','username','role']
-#
+
+class UserMeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+
 class DirectorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Director
