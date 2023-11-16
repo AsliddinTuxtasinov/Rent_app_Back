@@ -24,7 +24,7 @@ router.register('payments', PaymentsViewset, basename='payments')
 urlpatterns = [
     path('', include(router.urls)),
     path('auth-token', obtain_auth_token, name='api_token_auth'),
-    path('me', UserMeView.as_view())
+    path('users/me', UserMeView.as_view())
 ]
 
 if settings.DEBUG:
