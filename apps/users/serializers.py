@@ -29,19 +29,19 @@ class ManagerSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.ModelSerializer):
     username = serializers.CharField(max_length=223, required=True)
     password = serializers.CharField(max_length=68, write_only=True)
-    firstName = serializers.CharField(max_length=223, read_only=True)
-    lastName = serializers.CharField(max_length=223, read_only=True)
+    first_name = serializers.CharField(max_length=223, read_only=True)
+    last_name = serializers.CharField(max_length=223, read_only=True)
     # role = serializers.ChoiceField(max_length=223, read_only=True)
 
     def get_fist_name(self, obj):
         username = obj.get('username')
         user = User.objects.filter(username=username).first()
-        return user.firstName
+        return user.first_name
 
     def get_last_name(self, obj):
         username = obj.get('username')
         user = User.objects.filter(username=username).first()
-        return user.lastName
+        return user.last_name
     
     def role(self, obj):
         role = obj.get('role')
@@ -50,7 +50,7 @@ class LoginSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'password', 'firstName', 'lastName', 'role')
+        fields = ('id', 'username', 'password', 'first_name', 'last_name', 'role')
 
     def validate(self, attrs):
         username = attrs.get('username')
@@ -67,8 +67,8 @@ class LoginSerializer(serializers.ModelSerializer):
             "success": True,
             "id": user.id,
             "username": user.username,
-            "firstName": user.firstName,
-            "lastName": user.lastName,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
             "role": user.role,
         }
         refresh = RefreshToken.for_user(user)
