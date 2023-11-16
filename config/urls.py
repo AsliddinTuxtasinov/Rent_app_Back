@@ -73,7 +73,7 @@ urlpatterns = [
 
    
    
-   path('Login/', LoginAPIView.as_view()),
+   path('Login', LoginAPIView.as_view()),
    path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
 
 #    path('users/me', UserMeViewSet.as_view(), name='userme_view'),
