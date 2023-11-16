@@ -11,6 +11,17 @@ from django.urls.exceptions import Resolver404
 from rest_framework import generics, status
 from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 
+
+
+class UserMeView(generics.RetrieveAPIView):
+    serializer_class = UserMeSerializer
+    object = User
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+
 # Director Table
 class DirectorViewset(ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -36,6 +47,30 @@ class DirectorViewset(ModelViewSet):
         return self.update(request, *args, **kwargs)
     
     
+# Manager Table
+class ManagerViewset(ModelViewSet):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    queryset =  Manager.objects.all()
+    serializer_class = ManagerSerializer
+    def create(self, request, *args, **kwargs):
+        data =  request.data
+        try:
+            manager = Manager.objects.create_user(username=data['username'],password=data['password'])
+            serializer = ManagerSerializer(manager,partial=True)
+            return Response(serializer.data,status = status.HTTP_201_CREATED)
+        except:
+            return Response({'error':'Please be aware'})
+    def update(self, request, *args, **kwargs):
+        manager  =  self.get_object()
+        data = request.data
+        manager.username = data.get('username',manager.username)
+        manager.password = data.get('password',manager.password)
+        manager.save()
+        serializer = ManagerSerializer(manager,partial=True)
+        return Response(serializer.data,status=status.HTTP_202_ACCEPTED)
+    def partial_update(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
 class UserViewset(ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     queryset =  User.objects.all()

@@ -16,7 +16,10 @@ class DirectorSerializer(serializers.ModelSerializer):
         model = Director
         fields = ['id','username','role']
 
-
+class ManagerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Manager
+        fields = ['id','username','role']
    
 class LoginSerializer(serializers.ModelSerializer):
     username = serializers.CharField(max_length=223, required=True)
@@ -70,29 +73,3 @@ class LoginSerializer(serializers.ModelSerializer):
         return data
    
 
-
-
-# class MeSerializer(serializers.Serializer):
-#     token = serializers.CharField(max_length=1024, write_only=True)
-#     # access = serializers.CharField(max_length=1024, read_only=True)
-#     # refresh = serializers.CharField(max_length=1024, read_only=True)
-#     # refresh_token = serializers.CharField(max_length=1024, read_only=True)
-
-#     def validate(self, attrs):
-#         token = attrs.get('token')
-
-#         try:
-#             # Token ni olish va tasdiqlash
-#             decoded_token = RefreshToken(token)
-#             user_id = decoded_token.payload.get('user_id')
-#             user = User.objects.get(id=user_id)
-
-#             data = {
-#                 "access": str(decoded_token.access_token),
-#                 # "refresh": str(decoded_token),
-#                 # "refresh_token": str(decoded_token),
-#             }
-
-#             return data
-#         except Exception as e:
-#             raise AuthenticationFailed("Invalid token")
