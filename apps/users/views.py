@@ -21,6 +21,8 @@ class UserMeView(generics.RetrieveAPIView):
     serializer_class = UserMeSerializer
     object = User
     permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    search_fields = ('username','first_name','last_name','role')
 
     # renderer_classes = [CustomRenderer]
 
@@ -32,6 +34,7 @@ class DirectorViewset(ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = Director.objects.all()
     serializer_class = DirectorSerializer
+    search_fields = ('username','first_name','last_name','role')
 
     def create(self, request, *args, **kwargs):
         data = request.data
@@ -58,6 +61,7 @@ class ManagerViewset(ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = Manager.objects.all()
     serializer_class = ManagerSerializer
+    search_fields = ('username','first_name','last_name','role')
 
     def create(self, request, *args, **kwargs):
         data = request.data
@@ -85,6 +89,7 @@ class UserViewset(ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    search_fields = ('username','first_name','last_name','role')
 
     def create(self, request, *args, **kwargs):
         data = request.data
@@ -113,6 +118,7 @@ class LoginAPIView(generics.GenericAPIView):
     queryset = User.objects.all()
     serializer_class = LoginSerializer
     permission_classes = []
+    search_fields = ('username','first_name','last_name','role')
 
     def post(self, request, *args, **kwargs):
         print(request.data)
@@ -124,14 +130,3 @@ class LoginAPIView(generics.GenericAPIView):
 
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
-# class UserMeViewSet(viewsets.ViewSet):
-#     permission_classes = [IsAuthenticated]
-
-#     @action(detail=False, methods=['post'], url_path='me')
-#     def get_my_data(self, request):
-#         serializer = MeSerializer(data={'token': request.auth})
-#         if serializer.is_valid():
-#             user_data = serializer.validated_data
-#             return Response(user_data)
-#         else:
-#             raise AuthenticationFailed("Invalid token")
