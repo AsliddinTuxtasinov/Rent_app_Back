@@ -21,7 +21,7 @@ class UserMeView(generics.RetrieveAPIView):
     serializer_class = UserMeSerializer
     object = User
     permission_classes = [IsAuthenticated]
-    filter_backends = [DjangoFilterBackend, SearchFilter]
+    # filter_backends = [DjangoFilterBackend, SearchFilter]
     search_fields = ('username','first_name','last_name','role')
 
     # renderer_classes = [CustomRenderer]
