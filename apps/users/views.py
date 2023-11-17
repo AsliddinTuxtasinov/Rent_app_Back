@@ -22,7 +22,7 @@ class UserMeView(generics.RetrieveAPIView):
     object = User
     permission_classes = [IsAuthenticated]
     # filter_backends = [DjangoFilterBackend, SearchFilter]
-    search_fields = ('username','first_name','last_name','role')
+    # search_fields = ('username','first_name','last_name','role')
 
     # renderer_classes = [CustomRenderer]
 
