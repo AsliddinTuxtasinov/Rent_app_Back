@@ -8,7 +8,7 @@ class User(AbstractUser,PermissionsMixin):
         DIRECTOR = "DIRECTOR",'director'
         MANAGER = "MANAGER",'manager'
     description = models.TextField(verbose_name='Description', null=True, blank=True)
-    role = models.CharField(max_length=15,choices=Role.choices,null=True,blank=True)
+    role = models.CharField(max_length=15,choices=Role.choices)
     class Meta:
         db_table = "User"
 class DirectorManager(BaseUserManager):
