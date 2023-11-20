@@ -17,7 +17,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         # fields = ['id', 'username', 'role']
-        fields = ('id', 'username', 'password', 'first_name', 'last_name', 'role')
+        fields = ('id', 'username', 'first_name', 'last_name', 'role')
 
 
 #
@@ -25,7 +25,7 @@ class DirectorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Director
         # fields = ['id', 'username', 'role']
-        fields = ('id', 'username', 'password', 'first_name', 'last_name', 'role')
+        fields = ('id', 'username', 'first_name', 'last_name', 'role')
 
 class ManagerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -38,9 +38,7 @@ class LoginSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=68, write_only=True)
     first_name = serializers.CharField(max_length=223, read_only=True)
     last_name = serializers.CharField(max_length=223, read_only=True)
-
-    # role = serializers.ChoiceField(max_length=223, read_only=True)
-
+    # role = serializers.ChoiceField(max_length=223, read_only=True)  
     def get_fist_name(self, obj):
         username = obj.get('username')
         user = User.objects.filter(username=username).first()
@@ -58,7 +56,7 @@ class LoginSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username','first_name', 'last_name', 'role')
+        fields = ('id', 'username','first_name', 'last_name', 'role','password')
 
     def validate(self, attrs):
         username = attrs.get('username')
