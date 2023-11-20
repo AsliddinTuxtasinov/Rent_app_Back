@@ -15,7 +15,7 @@ from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 from rest_framework import generics
 
 from rest_framework.response import Response
-
+from rest_framework.authentication import SessionAuthentication
 
 class UserMeView(generics.RetrieveAPIView):
     serializer_class = UserMeSerializer
@@ -86,7 +86,8 @@ class ManagerViewset(ModelViewSet):
 
 
 class UserViewset(ModelViewSet):
-    # permission_classes = [IsAuthenticatedOrReadOnly]
+    authentication_classes = [SessionAuthentication]  # Autentifikatsiya turini aniqlash
+    permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = User.objects.all()
     serializer_class = UserSerializer
     search_fields = ('username','first_name','last_name','role')
