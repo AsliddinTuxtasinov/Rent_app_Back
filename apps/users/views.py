@@ -95,7 +95,7 @@ class UserViewset(ModelViewSet):
     def create(self, request, *args, **kwargs):
         data = request.data
         try:
-            user = User.objects.create_user(username=data['username'],first_name=data['first_name'],last_name=data['last_name'], password=data['password'])
+            user = User.objects.create_user(username=data['username'],first_name=data['first_name'],last_name=data['last_name'], password=data['password'], role=data['role'])
             serializer = UserSerializer(user, partial=True)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Exception as e:
