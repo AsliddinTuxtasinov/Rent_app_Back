@@ -34,7 +34,7 @@ class ProductType(models.Model):
 class Client(models.Model):
     name = models.CharField(max_length=200)
     passport = models.CharField(max_length=9, null=True, blank=True)
-    phone = models.CharField(max_length=9)
+    phone = models.CharField(max_length=13)
     desc = models.TextField(null=True, blank=True)
 
 

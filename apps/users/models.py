@@ -11,6 +11,7 @@ class User(AbstractUser,PermissionsMixin):
     role = models.CharField(max_length=15,choices=Role.choices)
     class Meta:
         db_table = "User"
+        
 class DirectorManager(BaseUserManager):
     def create_user(self , username , password = None):
         if not username or len(username) <= 0 : 

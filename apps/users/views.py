@@ -86,15 +86,15 @@ class ManagerViewset(ModelViewSet):
 
 
 class UserViewset(ModelViewSet):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    # permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    search_fields = ('username','password','first_name','last_name','role')
+    search_fields = ('username','first_name','last_name','role')
 
     def create(self, request, *args, **kwargs):
         data = request.data
         try:
-            user = User.objects.create_user(username=data['username'],first_name=data['first_name'],last_name=data['last_name'], password=data['password'])
+            user = User.objects.create_user(username=data['username'],first_name=data['first_name'],last_name=data['last_name'], password=data['password'],role=data['role'])
             serializer = UserSerializer(user, partial=True)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Exception as e:
