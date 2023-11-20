@@ -16,15 +16,9 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ClientSerializer(serializers.ModelSerializer):
-    # debt_product = serializers.ReadOnlyField()
-    # debt_product = serializers.ReadOnlyField()
     class Meta:
         model = Client
         fields = ['id','name','passport','phone','desc','transactions']
-        # def debt_product(self, obj):
-        #     count_out = obj.outcome.all().aggregate(Sum('count'))['count__sum'] or 0
-        #     count_in = obj.income.all().aggregate(Sum('count'))['count__sum'] or 0
-        #     return count_in - count_out
     
 
 

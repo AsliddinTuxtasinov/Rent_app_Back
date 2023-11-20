@@ -89,12 +89,12 @@ class UserViewset(ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    search_fields = ('username','first_name','last_name','role')
+    search_fields = ('username','password','first_name','last_name','role')
 
     def create(self, request, *args, **kwargs):
         data = request.data
         try:
-            user = User.objects.create_user(username=data['username'], password=data['password'])
+            user = User.objects.create_user(username=data['username'],first_name=data['first_name'],last_name=data['last_name'], password=data['password'])
             serializer = UserSerializer(user, partial=True)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Exception as e:
@@ -105,7 +105,10 @@ class UserViewset(ModelViewSet):
         user = self.get_object()
         data = request.data
         user.username = data.get('username', user.username)
+        user.first_name = data.get('first_name', user.first_name)
+        user.last_name = data.get('last_name', user.last_name)
         user.password = data.get('password', user.password)
+        
         user.save()
         serializer = UserSerializer(user, partial=True)
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
@@ -121,7 +124,7 @@ class LoginAPIView(generics.GenericAPIView):
     search_fields = ('username','first_name','last_name','role')
 
     def post(self, request, *args, **kwargs):
-        print(request.data)
+        # print(request.data)
         serializer = self.get_serializer(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
