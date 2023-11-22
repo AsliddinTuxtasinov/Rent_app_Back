@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework.decorators import renderer_classes
 
 from rest_framework.viewsets import ModelViewSet
+
 # from config.custom_renderers import CustomRenderer
 from .models import *
 from rest_framework import status
@@ -21,7 +22,13 @@ from rest_framework import generics, views
 from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication
 
-from .serializers import UserMeSerializer, DirectorSerializer, ManagerSerializer, UserSerializer, LoginSerializer
+from .serializers import (
+    UserMeSerializer,
+    DirectorSerializer,
+    ManagerSerializer,
+    UserSerializer,
+    LoginSerializer,
+)
 
 
 class UserMeView(generics.RetrieveAPIView):
@@ -165,5 +172,8 @@ class LoginView(generics.GenericAPIView):
             return Response(response_data, status=status.HTTP_200_OK)
         else:
             raise AuthenticationFailed(
-                {"status": False, "message": "Something went wrong during authentication"}
+                {
+                    "status": False,
+                    "message": "Something went wrong during authentication",
+                }
             )

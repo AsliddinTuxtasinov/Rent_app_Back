@@ -119,9 +119,10 @@ class LoginSerializer(serializers.Serializer):
     def validate_username(username):
         # Check if the username length is between 5 and 30 characters
         if len(username) < 4 or len(username) > 30:
-            raise exceptions.ValidationError({
-                "message": "username must be between 4 and 30 characters"
-            }, status.HTTP_400_BAD_REQUEST)
+            raise exceptions.ValidationError(
+                {"message": "username must be between 4 and 30 characters"},
+                status.HTTP_400_BAD_REQUEST,
+            )
 
         # Check if the username contains only digits
         # elif username.isdigit():
