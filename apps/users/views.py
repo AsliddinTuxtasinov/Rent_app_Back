@@ -2,20 +2,26 @@ from django.shortcuts import render
 from rest_framework.decorators import renderer_classes
 
 from rest_framework.viewsets import ModelViewSet
-from apps.users.serializers import *
-from config.custom_renderers import CustomRenderer
+# from config.custom_renderers import CustomRenderer
 from .models import *
 from rest_framework import status
 from rest_framework.response import Response
+
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.exceptions import AuthenticationFailed
+from django.contrib.auth import authenticate
+
 from rest_framework.permissions import IsAuthenticated, SAFE_METHODS
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django.urls.exceptions import Resolver404
-from rest_framework import generics, status
+from rest_framework import generics, status, permissions
 from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
-from rest_framework import generics
+from rest_framework import generics, views
 
 from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication
+
+from .serializers import UserMeSerializer, DirectorSerializer, ManagerSerializer, UserSerializer, LoginSerializer
 
 
 class UserMeView(generics.RetrieveAPIView):
@@ -45,8 +51,8 @@ class DirectorViewset(ModelViewSet):
             )
             serializer = DirectorSerializer(director, partial=True)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        except:
-            return Response({"error": "Please be aware"})
+        except Exception as e:
+            return Response({"error": str(e)})
 
     def update(self, request, *args, **kwargs):
         director = self.get_object()
@@ -130,18 +136,34 @@ class UserViewset(ModelViewSet):
         return self.update(request, *args, **kwargs)
 
 
-class LoginAPIView(generics.GenericAPIView):
-    queryset = User.objects.all()
+class LoginView(generics.GenericAPIView):
+    permission_classes = [permissions.AllowAny]
     serializer_class = LoginSerializer
-    permission_classes = []
-    search_fields = ("username", "first_name", "last_name", "role")
 
     def post(self, request, *args, **kwargs):
-        # print(request.data)
-        serializer = self.get_serializer(data=request.data)
-        try:
-            serializer.is_valid(raise_exception=True)
-        except TokenError as e:
-            raise InvalidToken(e.args[0])
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = authenticate(
+            username=serializer.validated_data["username"],
+            password=serializer.validated_data["password"],
+        )
 
-        return Response(serializer.validated_data, status=status.HTTP_200_OK)
+        if user:
+            refresh = RefreshToken.for_user(user)
+            response_data = {
+                "user": {
+                    "success": True,
+                    "id": user.id,
+                    "username": user.username,
+                    "first_name": user.first_name,
+                    "last_name": user.last_name,
+                    "role": user.role,
+                },
+                "refresh": str(refresh),
+                "access": str(refresh.access_token),
+            }
+            return Response(response_data, status=status.HTTP_200_OK)
+        else:
+            raise AuthenticationFailed(
+                {"status": False, "message": "Something went wrong during authentication"}
+            )
